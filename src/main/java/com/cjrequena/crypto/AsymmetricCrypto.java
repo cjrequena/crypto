@@ -20,6 +20,14 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
 
+/**
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * @author cjrequena
+ *
+ */
 public class AsymmetricCrypto {
 
   /**
@@ -28,41 +36,6 @@ public class AsymmetricCrypto {
   static {
     if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
       Security.addProvider(new BouncyCastleProvider());
-    }
-  }
-
-  /**
-   *
-   */
-  public enum Algorithm {
-    AES("AES"),
-    BLOWFISH("Blowfish"),
-    DES("DES"),
-    DESEDE("DESede"),
-    DIFFIEHELLMAN("DiffieHellman"),
-    DSA("DSA"),
-    EC("EC"),
-    OAEP("OAEP"),
-    PBE("PBE"),
-    RC2("RC2"),
-    RSA("RSA");
-
-    private String algorithm;
-
-    /**
-     *
-     * @param algorithm
-     */
-    Algorithm(String algorithm) {
-      this.algorithm = algorithm;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getAlgorithm() {
-      return this.algorithm;
     }
   }
 
@@ -110,22 +83,22 @@ public class AsymmetricCrypto {
     return keyPair;
   }
 
-  /**
-   *
-   * @param spec
-   * @return
-   * @throws NoSuchAlgorithmException
-   * @throws NoSuchProviderException
-   * @throws InvalidAlgorithmParameterException
-   */
-  public static KeyPair generateECKeyPair(String spec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
-    KeyPairGenerator keyGen = KeyPairGenerator.getInstance(Algorithm.EC.getAlgorithm());
-    ECGenParameterSpec parameterSpec = new ECGenParameterSpec(spec);
-    //ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(spec);
-    keyGen.initialize(parameterSpec, new SecureRandom());
-    KeyPair keyPair = keyGen.generateKeyPair();
-    return keyPair;
-  }
+//  /**
+//   *
+//   * @param spec
+//   * @return
+//   * @throws NoSuchAlgorithmException
+//   * @throws NoSuchProviderException
+//   * @throws InvalidAlgorithmParameterException
+//   */
+//  public static KeyPair generateECKeyPair(String spec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+//    KeyPairGenerator keyGen = KeyPairGenerator.getInstance(Algorithm.EC.getAlgorithm());
+//    ECGenParameterSpec parameterSpec = new ECGenParameterSpec(spec);
+//    //ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(spec);
+//    keyGen.initialize(parameterSpec, new SecureRandom());
+//    KeyPair keyPair = keyGen.generateKeyPair();
+//    return keyPair;
+//  }
 
   /**
    *

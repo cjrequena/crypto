@@ -24,11 +24,18 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Random;
 
-import static com.cjrequena.crypto.AsymmetricCrypto.generateECKeyPair;
 import static com.cjrequena.crypto.AsymmetricCrypto.generateKeyPair;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+/**
+ * <p>
+ * <p>
+ * <p>
+ * <p>
+ * @author cjrequena
+ *
+ */
 @Log4j2
 public class AsymmetricCryptoTest {
 
@@ -41,9 +48,18 @@ public class AsymmetricCryptoTest {
   }
 
   @Test
-  public void generateKeyPairTest() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+  public void generateRSAKeyPairTest() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException {
     // Generate a 1024-bit Digital Signature Algorithm (DSA) key pair
-    KeyPair keyPair = generateKeyPair(AsymmetricCrypto.Algorithm.RSA.getAlgorithm(), 1024, new Random().nextLong());
+    KeyPair keyPair = generateKeyPair(Algorithm.RSA.getAlgorithm(), 1024, new Random().nextLong());
+    log.debug("private key: {}", Base64.toBase64String(keyPair.getPrivate().getEncoded()));
+    log.debug("public key: {}", Base64.toBase64String(keyPair.getPublic().getEncoded()));
+    verifyCreatedKeys(keyPair);
+  }
+
+  @Test
+  public void generateDHKeyPairTest() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException {
+    // Generate a 576-bit DH key pair
+    KeyPair keyPair = generateKeyPair(Algorithm.DH.getAlgorithm(), 576, new Random().nextLong());
     log.debug("private key: {}", Base64.toBase64String(keyPair.getPrivate().getEncoded()));
     log.debug("public key: {}", Base64.toBase64String(keyPair.getPublic().getEncoded()));
     verifyCreatedKeys(keyPair);
@@ -51,8 +67,7 @@ public class AsymmetricCryptoTest {
 
   @Test
   public void generateECKeyPairTest() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-    // Generate a 1024-bit Digital Signature Algorithm (DSA) key pair
-    KeyPair keyPair = generateECKeyPair("secp256k1");
+    KeyPair keyPair = generateKeyPair(Algorithm.EC.getAlgorithm(), 256, new Random().nextLong());
     log.debug("private key: {}", Base64.toBase64String(keyPair.getPrivate().getEncoded()));
     log.debug("public key: {}", Base64.toBase64String(keyPair.getPublic().getEncoded()));
     verifyCreatedKeys(keyPair);
@@ -61,13 +76,12 @@ public class AsymmetricCryptoTest {
   @Test
   public void encryptDecryptTest() throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, BadPaddingException, NoSuchPaddingException,
     IllegalBlockSizeException, UnsupportedEncodingException, NoSuchProviderException, InvalidAlgorithmParameterException {
-    KeyPair keyPair = generateKeyPair(AsymmetricCrypto.Algorithm.RSA.getAlgorithm(), 1024);
+    KeyPair keyPair = generateKeyPair(Algorithm.RSA.getAlgorithm(), 1024);
     String classifiedInformation = "CLASSIFIED INFORMATION";
-    String encryptedClassifiedInformation = AsymmetricCrypto.encrypt("CLASSIFIED INFORMATION", keyPair.getPublic(), AsymmetricCrypto.Algorithm.RSA.getAlgorithm());
-    assertEquals(AsymmetricCrypto.decrypt(encryptedClassifiedInformation, keyPair.getPrivate(), AsymmetricCrypto.Algorithm.RSA.getAlgorithm()), classifiedInformation);
-    assertNotEquals(AsymmetricCrypto.decrypt(encryptedClassifiedInformation, keyPair.getPrivate(), AsymmetricCrypto.Algorithm.RSA.getAlgorithm()), classifiedInformation + "DAMAGE");
+    String encryptedClassifiedInformation = AsymmetricCrypto.encrypt("CLASSIFIED INFORMATION", keyPair.getPublic(), Algorithm.RSA.getAlgorithm());
+    assertEquals(AsymmetricCrypto.decrypt(encryptedClassifiedInformation, keyPair.getPrivate(), Algorithm.RSA.getAlgorithm()), classifiedInformation);
+    assertNotEquals(AsymmetricCrypto.decrypt(encryptedClassifiedInformation, keyPair.getPrivate(), Algorithm.RSA.getAlgorithm()), classifiedInformation + "DAMAGE");
   }
-
 
   private void verifyCreatedKeys(KeyPair keyPair) throws NoSuchAlgorithmException, InvalidKeySpecException {
     PrivateKey privateKey = keyPair.getPrivate();
